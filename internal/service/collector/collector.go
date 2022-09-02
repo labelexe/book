@@ -1,10 +1,34 @@
 package collector
 
-import "github.com/reucot/parser/internal/storage/repository"
+import (
+	"context"
 
-type Service struct {
+	"github.com/reucot/parser/internal/service/collector/onexstavka"
+	"github.com/reucot/parser/internal/storage/repository"
+)
+
+type Collector interface {
+	Start(ctx context.Context)
 }
 
-func New(repo *repository.Repository) *Service {
-	return &Service{}
+type Service struct {
+	collectors []Collector
+}
+
+func New(reps *repository.Repository) *Service {
+	c := make([]Collector, 1)
+
+	c[0] = *onexstavka.NewOneXStavka(reps)
+
+	return &Service{
+		collectors: c,
+	}
+}
+
+func (s Service) Run() {
+	ctx := context.Background()
+
+	for _, collector := range s.collectors {
+		collector.Start(ctx)
+	}
 }

@@ -1,6 +1,9 @@
 package config
 
 type (
+	Domain struct {
+		OneXStavka string `json:"one_x_stavka"`
+	}
 	DB struct {
 		Name     string `json:"name" env:"DB_NAME"`
 		Password string `json:"password" env:"DB_PASSWORD"`

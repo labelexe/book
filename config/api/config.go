@@ -1,4 +1,4 @@
-package collector
+package api
 
 import (
 	"path/filepath"
@@ -11,8 +11,7 @@ import (
 )
 
 type Config struct {
-	Domains config.Domain `json:"domains"`
-	DB      config.DB     `json:"db"`
+	DB config.DB `json:"db"`
 }
 
 var instance Config
@@ -33,7 +32,7 @@ func Load() error {
 		return err
 	}
 
-	filename, err = filepath.Abs(filepath.Join("./", "cmd/collector/config.json"))
+	filename, err = filepath.Abs(filepath.Join("./", "cmd/api/config.json"))
 	if err != nil {
 		return err
 	}

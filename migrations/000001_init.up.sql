@@ -1,10 +1,14 @@
 -- Категории спорта
 CREATE TABLE categories
 (
-    id            serial                                          primary key,
-    name_ru       varchar(255)                                    not null,
-    name_en       varchar(255)                                    not null
+    id      serial                                          primary key,
+    name_ru varchar(255)                                    not null,
+    name_en varchar(255)                                    not null,
+    api_id  int                                             not null,
+    api_src varchar(5)                                      not null
 );
+
+CREATE INDEX api_categories ON categories(api_id,api_src);
 
 -- Страны
 CREATE TABLE countries
@@ -44,11 +48,15 @@ CREATE TABLE lines
     name_ru       varchar(255)                                            not null,
     name_en       varchar(255)                                            not null,
     category_id   int constraint fk_categories references categories (id) on delete cascade not null,
-    country_id    int constraint fk_countries references countries (id)   on delete cascade not null,
+    country       varchar(100)                                            on delete cascade not null,
     tourney       varchar(100)                                            not null,
     type          varchar(10) CONSTRAINT one_of_type CHECK (type = 'live' OR type = 'prematch'),
-    game_id       int constraint fk_games references games (id)           on delete cascade not null
+    game_id       int constraint fk_games references games (id)           on delete cascade not null,
+    api_id        int                                                     not null,
+    api_src       varchar(5)                                              not null
 );
+
+CREATE INDEX api_lines ON lines(api_id,api_src);
 
 -- События
 CREATE TABLE events

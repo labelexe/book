@@ -21,14 +21,14 @@ func NewLine(db *sqlx.DB) *Line {
 
 func (l Line) Create(ctx context.Context, item models.Line) (int, error) {
 	query := fmt.Sprintf(`INSERT INTO %s 
-	(name_ru, name_en, category_id, country_id, tourney, type_line, games_id) 
-	VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`, LinesTable)
+	(name_ru, name_en, category_id, country_id, tourney, type_line, games_id, api_id, api_src) 
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`, LinesTable)
 
 	id := 0
 	err := l.db.QueryRowContext(ctx,
 		query,
-		item.NameRU, item.NameEN, item.CategoryID, item.CountryID,
-		item.Tourney, item.TypeLine, item.GameID).Scan(&id)
+		item.NameRU, item.NameEN, item.CategoryID, item.Country,
+		item.Tourney, item.TypeLine, item.GameID, item.ApiID, item.ApiSrc).Scan(&id)
 
 	if err != nil {
 		return 0, err
@@ -47,7 +47,9 @@ func (l Line) GetByID(ctx context.Context, id int) (models.Line, error) {
 		country_id, 
 		tourney, 
 		type_line, 
-		games_id 
+		games_id,
+		api_id,
+		api_src 
 	FROM %s 
 	WHERE id = $1`, LinesTable)
 
@@ -68,7 +70,9 @@ func (l Line) GetAll(ctx context.Context) ([]models.Line, error) {
 		country_id, 
 		tourney, 
 		type_line, 
-		games_id 
+		games_id,
+		api_id,
+		api_src 
 	FROM %s `, LinesTable)
 
 	if err := l.db.SelectContext(ctx, &output, query); err != nil && err != sql.ErrNoRows {
@@ -83,12 +87,12 @@ func (l Line) Update(ctx context.Context, id int, input models.Line) error {
 	UPDATE %s 
 	SET 
 		name_ru=$2, name_en=$3, category_id=$4, country_id=$5,
-		tourney=$6, type_line=$7, games_id=$8 
+		tourney=$6, type_line=$7, games_id=$8, api_id=$9, api_src=$10  
 	WHERE id = $1`, LinesTable)
 
 	_, err := l.db.ExecContext(ctx, query, id,
-		input.NameRU, input.NameEN, input.CategoryID, input.CountryID,
-		input.Tourney, input.TypeLine, input.GameID)
+		input.NameRU, input.NameEN, input.CategoryID, input.Country,
+		input.Tourney, input.TypeLine, input.GameID, input.ApiID, input.ApiSrc)
 
 	if err != nil {
 		return err

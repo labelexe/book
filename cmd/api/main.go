@@ -12,6 +12,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+//TODO: Адресс сайта для парсинга вынести в env или config.json
 func main() {
 
 	if err := config.Load(); err != nil {
@@ -28,10 +29,11 @@ func main() {
 	})
 
 	if err != nil {
-		logrus.Fatal(fmt.Errorf("unable connect to postgres: %s", err))
+		logrus.Fatal(fmt.Errorf("unable connect to postgres: %w", err))
 	}
 
 	repo := repository.NewPsql(db)
-	service := service.New(repo)
-	service.Run()
+	//services :=
+	service.New(repo)
+
 }

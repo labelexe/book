@@ -23,6 +23,7 @@ type Bet interface {
 type Category interface {
 	Create(ctx context.Context, item models.Category) (int, error)
 	GetByID(ctx context.Context, id int) (models.Category, error)
+	GetByApiID(ctx context.Context, id int, src string) (models.Category, error)
 	GetAll(ctx context.Context) ([]models.Category, error)
 	Update(ctx context.Context, id int, input models.Category) error
 	Delete(ctx context.Context, id int) error

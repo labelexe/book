@@ -1,7 +1,4 @@
 {
-    "domains":{
-        "one_x_stavka":"1xstavka.ru"
-    },
     "db":{
         "driver":"postgres",
         "name":"${DB_NAME}",
